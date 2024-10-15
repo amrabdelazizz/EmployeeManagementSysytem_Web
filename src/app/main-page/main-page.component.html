@@ -1,0 +1,98 @@
+<!-- Button and Employee Table Section -->
+<h2>
+  Employee List
+  <button class="add-button" (click)="openAddEmployeeForm()">Add Employee</button>
+  <button (click)="logout()">Logout</button>
+</h2>
+<div>
+  <button (click)="toggleView(false)">View Active Employees</button>
+  <button (click)="toggleView(true)">View Deleted Employees</button>
+</div>
+
+<!-- Table for Active Employees -->
+<table *ngIf="!showDeletedEmployees && employees.length > 0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Job Title</th>
+      <th>Hire Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let employee of employees">
+      <td>{{ employee.employeeID }}</td>
+      <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+      <td>{{ employee.email }}</td>
+      <td>{{ employee.phoneNumber }}</td>
+      <td>{{ employee.jobTitle }}</td>
+      <td>{{ employee.hireDate | date: 'yyyy-MM-dd' }}</td>
+      <td>
+        <button (click)="openEditEmployeeForm(employee)">Edit</button>
+        <button (click)="confirmDeleteEmployee(employee.employeeID)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Table for Deleted Employees -->
+<table *ngIf="showDeletedEmployees && deletedEmployees.length > 0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Job Title</th>
+      <th>Hire Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let employee of deletedEmployees">
+      <td>{{ employee.employeeID }}</td>
+      <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+      <td>{{ employee.email }}</td>
+      <td>{{ employee.phoneNumber }}</td>
+      <td>{{ employee.jobTitle }}</td>
+      <td>{{ employee.hireDate | date: 'yyyy-MM-dd' }}</td>
+      <td>
+        <button (click)="confirmUnDeleteEmployee(employee.employeeID)">Undelete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Employee Form Modal -->
+<div class="modal-overlay" *ngIf="isFormVisible">
+  <div class="modal">
+    <h3>{{ isEditMode ? 'Edit Employee' : 'Add Employee' }}</h3>
+    <form (ngSubmit)="isEditMode ? updateEmployee() : addEmployee()">
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" [(ngModel)]="newEmployee.firstName" name="firstName" required />
+
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" [(ngModel)]="newEmployee.lastName" name="lastName" required />
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" [(ngModel)]="newEmployee.email" name="email" required />
+
+      <label for="phoneNumber">Phone Number:</label>
+      <input type="text" id="phoneNumber" [(ngModel)]="newEmployee.phoneNumber" name="phoneNumber" required />
+
+      <label for="jobTitle">Job Title:</label>
+      <input type="text" id="jobTitle" [(ngModel)]="newEmployee.jobTitle" name="jobTitle" required />
+
+      <label for="hireDate">Hire Date:</label>
+      <input type="string" id="hireDate" [(ngModel)]="newEmployee.hireDate" name="hireDate" required />
+
+      <div class="form-actions">
+        <button type="submit">{{ isEditMode ? 'Update' : 'Add' }}</button>
+        <button type="button" (click)="closeForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
